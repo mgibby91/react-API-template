@@ -24,6 +24,13 @@ db.connect(() => {
   console.log('Connected to the db');
 });
 
+// Session memory
+const cookieSession = require('cookie-session');
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1']
+}));
+
 // Server routes
 const userRoutes = require('./routes/userRoutes');
 
