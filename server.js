@@ -4,6 +4,7 @@ require('dotenv').config();
 // Node server
 const PORT = process.env.PORT || 8085;
 const express = require('express');
+const socket = require('socket.io');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
@@ -77,6 +78,15 @@ Promise.all([
 // **********************************************
 
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`API listening on port ${PORT}`);
 })
+
+// socket setup
+const io = socket(server);
+
+io.on('connection', (socket) => {
+  socket.on('message', ({ name, message }) => {
+    io.emit('message', { name, message })
+  })
+});
