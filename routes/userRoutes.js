@@ -20,6 +20,8 @@ router.post('/register', (req, res) => {
   console.log('userPostRes', req.body);
   registerUser(req.body)
     .then(result => {
+      console.log('reg result', result)
+      req.session = result[0];
       res.json(result)
     })
 })
@@ -31,15 +33,28 @@ router.post('/login', (req, res) => {
     .then(result => {
       // req.session.user_id = result.
       console.log('loggedInRes', result);
-      req.session.user_id = result[0].id;
+      req.session = result[0];
       res.json(result)
+    })
+    .catch(err => {
+      res.send(err);
     })
 })
 
 router.get('/logged_in', (req, res) => {
 
-  const userID = req.session.user_id;
-  res.json({ userID });
+  const userData = req.session;
+  res.json({ userData });
+})
+
+router.get('/logout', (req, res) => {
+
+  console.log('hiiii');
+  req.session = null;
+  console.log('req.session', req.session);
+
+  res.json({ userData: req.session });
+
 })
 
 module.exports = router;
